@@ -1,5 +1,5 @@
 import telebot
-from anekdot_ru_hook import get
+from anekdot_ru_hook import getTg
 from telebot import types
 
 bot = telebot.TeleBot("5246671614:AAE2cTjj4g_V2KqNZQP28F-srrnu_t_umUQ")
@@ -15,5 +15,5 @@ def start(message):
 @bot.message_handler(content_types=['text'])
 def func(message):
     if(message.text == "🤡 Анекдот"):
-        bot.send_message(message.chat.id, get().format(message.from_user))
+        bot.send_message(message.chat.id, getTg().format(message.from_user))
 bot.polling(none_stop=True)

@@ -1,5 +1,11 @@
+'''from xml.etree.ElementTree import tostring'''
 import requests, bs4
-def get():
+from bs4 import BeautifulSoup as BS
+'''from telethon import TelegramClient, events'''
+from fake_useragent import UserAgent
+import random
+
+def getAnekdotRu():
     url = 'https://anekdot.ru/random/anekdot'                        
     h   = {"User-Agent":"1"}                   # сайт не пускает без header
     web = requests.get(url, headers=h).text    # Получение кода веб-сайта, где расположены случайные анекдоты
@@ -13,19 +19,31 @@ def get():
     text = text.split("<")
     text[-1] = ""
     text = ''.join(text)
+    #print(text)
     return text
-    print(text)
 
 def getTg():
-    api_id = 15255283
-    api_hash = '2ae88f48e54b619053ed0fdc2d561f33'
     url = "https://t.me/jumoreski_vk/"
-    messageNumber=419
+    messageNumber=random.randint(7, 2500)
     urlLstPart="?embed=1"
-    r = requests.get('https://dl.sibsau.ru/', headers={'User-Agent': UserAgent().chrome})
-    html = BS(r.content, 'html.parser')
+    request = requests.get(url+str(messageNumber)+urlLstPart, headers={'User-Agent': UserAgent().chrome})
+    html = (BS(request.text, 'html.parser'))
+    html = html.find("div", {"class": "tgme_widget_message_text js-message_text"})
+    html = str(html)
+    html = html.replace("<br/>","\n")
+    html = html.split(">")
+    html[0] = ""
+    html = ''.join(html)
+    html = html.split("<")
+    html[-1] = ""
+    html = ''.join(html)
+    html = html.replace("/b","")
+    if html == '':
+        html = getTg()
+        return (html)
+    if html[0] == 'b':
+        html = html.replace(html[0], "", 1)
 
-    return (r)
-    print (r)
+    return (html)
 
-getAnekdotRu()
+getTg()
