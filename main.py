@@ -2,7 +2,7 @@ import telebot
 from anekdot_ru_hook import getTg
 from telebot import types
 
-bot = telebot.TeleBot("5246671614:AAE2cTjj4g_V2KqNZQP28F-srrnu_t_umUQ")
+bot = telebot.TeleBot(TG_API_KEY)
 
 @bot.message_handler(commands=['start'])
 def start(message):
