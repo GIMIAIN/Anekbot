@@ -1,9 +1,10 @@
 '''from xml.etree.ElementTree import tostring'''
+from pickle import FALSE
 import requests, bs4
+import re
 from bs4 import BeautifulSoup as BS
 '''from telethon import TelegramClient, events'''
 from fake_useragent import UserAgent
-import random
 
 def getAnekdotRu():
     url = 'https://anekdot.ru/random/anekdot'                        
@@ -22,11 +23,8 @@ def getAnekdotRu():
     #print(text)
     return text
 
-def getTg():
-    url = "https://t.me/jumoreski_vk/"
-    messageNumber=random.randint(7, 2500)
-    urlLstPart="?embed=1"
-    request = requests.get(url+str(messageNumber)+urlLstPart, headers={'User-Agent': UserAgent().chrome})
+def getTg(url):
+    request = requests.get(url, headers={'User-Agent': UserAgent().chrome})
     html = (BS(request.text, 'html.parser'))
     html = html.find("div", {"class": "tgme_widget_message_text js-message_text"})
     html = str(html)
@@ -46,4 +44,22 @@ def getTg():
 
     return (html)
 
-getTg()
+def getTgImg(url):
+    request = requests.get(url, headers={'User-Agent': UserAgent().chrome})
+    html = (BS(request.text, 'html.parser'))
+    html = html.find("div", {"class": "tgme_widget_message_bubble"})
+    html = html.find("a", {"class": "tgme_widget_message_photo_wrap"})
+    try:
+        html = html.get("style")
+        html = re.findall(r'url\((.+)\)', html)
+        html = str(html)
+        html = html.replace('"','')
+        html = html.replace("'","")
+        html = html.replace("[","")
+        html = html.replace("]","")
+    except:
+        html = "None"
+
+    return (html)
+
+getTgImg("https://t.me/jumoreski_vk/433?embed=1")
