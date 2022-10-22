@@ -1,7 +1,9 @@
 import telebot
 from env import TG_API_KEY
 from anekdot_ru_hook import getTg
+from anekdot_ru_hook import getTgImg
 from telebot import types
+import random
 
 TG_API_KEY=TG_API_KEY()
 
@@ -17,6 +19,14 @@ def start(message):
 
 @bot.message_handler(content_types=['text'])
 def func(message):
-    if(message.text == "🤡 Анекдот"):
-        bot.send_message(message.chat.id, getTg().format(message.from_user))
+
+        if(message.text == "🤡 Анекдот"):
+            url = "https://t.me/jumoreski_vk/"
+            messageNumber=random.randint(7, 2500)
+            urlLstPart="?embed=1"
+            url = url+str(messageNumber)+urlLstPart
+            if getTgImg(url)=="None":
+                bot.send_message(message.chat.id, getTg(url).format(message.from_user))
+            else:
+                bot.send_photo(message.chat.id, photo=getTgImg(url), caption=getTg(url))
 bot.polling(none_stop=True)
