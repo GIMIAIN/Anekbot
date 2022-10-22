@@ -37,7 +37,7 @@ def getTg(url):
     html = ''.join(html)
     html = html.replace("/b","")
     if html == '':
-        html = getTg()
+        html = getTg(url)
         return (html)
     if html[0] == 'b':
         html = html.replace(html[0], "", 1)
@@ -61,5 +61,3 @@ def getTgImg(url):
         html = "None"
 
     return (html)
-
-getTgImg("https://t.me/jumoreski_vk/433?embed=1")
