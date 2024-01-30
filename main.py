@@ -1,3 +1,6 @@
+#! /usr/bin/env python  
+# -*- coding: utf-8 -*-
+
 from env import TG_API_KEY
 from anekdot_ru_hook import getTg
 from anekdot_ru_hook import getTgImg
