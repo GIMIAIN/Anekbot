@@ -21,35 +21,36 @@ def getAnekdotRu():
     text[-1] = ""
     text = ''.join(text)
     #print(text)
-    return text
+    return (text)
 
-def getTg(url):
-    request = requests.get(url, headers={'User-Agent': UserAgent().chrome})
-    html = (BS(request.text, 'html.parser'))
-    html = html.find("div", {"class": "tgme_widget_message_text js-message_text"})
-    html = str(html)
-    html = html.replace("<br/>","\n")
-    html = html.split(">")
-    html[0] = ""
-    html = ''.join(html)
-    html = html.split("<")
-    html[-1] = ""
-    html = ''.join(html)
-    html = html.replace("/b","")
-    if html == '':
-        html = getTg(url)
-        return (html)
-    if html[0] == 'b':
-        html = html.replace(html[0], "", 1)
+def getTg(response):
+    if "tgme_widget_message_text js-message_text" in response.text:
+        html = (BS(response.text, 'html.parser'))
+        html = html.find("div", {"class": "tgme_widget_message_text js-message_text"})
+        html = str(html)
+        html = html.replace("<br/>","\n")
+        html = html.split(">")
+        html[0] = ""
+        html = ''.join(html)
+        html = html.split("<")
+        html[-1] = ""
+        html = ''.join(html)
+        html = html.replace("/b","")
+        if html == '':
+            html = getTg(response)
+            return (html)
+        if html[0] == 'b':
+            html = html.replace(html[0], "", 1)
+    else:
+        return ("None")
 
     return (html)
 
-def getTgImg(url):
-    request = requests.get(url, headers={'User-Agent': UserAgent().chrome})
-    html = (BS(request.text, 'html.parser'))
-    html = html.find("div", {"class": "tgme_widget_message_bubble"})
-    html = html.find("a", {"class": "tgme_widget_message_photo_wrap"})
-    try:
+def getTgImg(response):
+    if "tgme_widget_message_photo_wrap" in response.text:
+        html = (BS(response.text, 'html.parser'))
+        html = html.find("div", {"class": "tgme_widget_message_bubble"})
+        html = html.find("a", {"class": "tgme_widget_message_photo_wrap"})
         html = html.get("style")
         html = re.findall(r'url\((.+)\)', html)
         html = str(html)
@@ -57,7 +58,17 @@ def getTgImg(url):
         html = html.replace("'","")
         html = html.replace("[","")
         html = html.replace("]","")
-    except:
+    else:
+        html = "None"
+    
+    return (html)
+
+def getTgVideo(response):
+    if "tgme_widget_message_video js-message_video" in response.text:
+        html = (BS(response.text, 'html.parser'))
+        html = html.find("video", {"class": "tgme_widget_message_video js-message_video"})
+        html = html.get("src")
+    else:
         html = "None"
 
     return (html)
